@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# genEdFinder_requests.py - Finds gen eds that satisfy multiple categories
+# genEdFinder.py - Finds gen eds that satisfy multiple categories
 #                           using requests and bs4
 #
 # 31 Oct 2018 - Written by Chase Hill
@@ -28,7 +28,7 @@ def getCourses(url):
     
     # Definitely not using BS to its full potential here, but the prettify method
     # prints out the html in a tiered fashion in which I can parse the desired
-    # line easier using string methods
+    # lines easier using string methods
     page = soup.prettify()
     
     # Splits the "prettified"  page up by lines
@@ -36,7 +36,7 @@ def getCourses(url):
     
     courseNoDesc = []
     
-    # Searches each line for the string immediately preceding the update date and
+    # Searches each line for the string immediately preceding the course and
     # uses string methods to parse the rest of the line in a readable way
     for i in range(len(lines)):
         
@@ -89,9 +89,16 @@ for i in range(len(selection)):
 print("Courses satisfying Area", areaString)
 
 matches = set(courses[0]).intersection(courses[1])
-test = 2
-while test < (len(selection)):
-    matches = set(matches).intersection(courses[test])
-    test = test + 1
+subsequentListIndex = 2
+while subsequentListIndex < (len(selection)):
+    matches = matches.intersection(courses[subsequentListIndex])
+    subsequentListIndex = subsequentListIndex + 1
+    
+# =============================================================================
+# if (len(selection) > 2) and (matches != set()):
+#     print('Perfect match not found. Near matches:')
+#     matches = set(courses[0]).intersection(courses[1])
+#     if matches != set():
+# =============================================================================
 
 print(matches)
