@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+ 
+<div class="block1">
+<h1>Hello! Enter selection in url (ex: 127.0.0.1/BCDEFG)</h1>
+  <h2>Results: </h2>
+  <p>
+{% autoescape false %}
+{{finalOutputString}}
+{% endautoescape %}
+  </p>
+<img src="http://www.naturalprogramming.com/images/smilingpython.gif">
+</div>
+{% endblock %}
