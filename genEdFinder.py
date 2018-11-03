@@ -9,6 +9,7 @@
 
 
 from bs4 import BeautifulSoup
+from itertools import combinations
 import re
 import requests
 
@@ -64,16 +65,16 @@ urlG = 'https://my.sa.ucsb.edu/catalog/Current/UndergraduateEducation/AreaG.aspx
 selection = input("Which areas? (Comma sep) [B,C,D,E,F,G]: ")
 selection = selection.split(',')
 
-courses = []  # List of area course lists
+courses = [[],[],[],[],[],[]]  # List of area course lists
 
 for i in range(len(selection)):
    
-    if selection[i] == 'B': courses.append(getCourses(urlB))
-    elif selection[i] == 'C': courses.append(getCourses(urlC))
-    elif selection[i] == 'D': courses.append(getCourses(urlD))
-    elif selection[i] == 'E': courses.append(getCourses(urlE))
-    elif selection[i] == 'F': courses.append(getCourses(urlF))
-    elif selection[i] == 'G': courses.append(getCourses(urlG))
+    if selection[i] == 'B': courses[0] = getCourses(urlB)
+    elif selection[i] == 'C': courses[1] = getCourses(urlC)
+    elif selection[i] == 'D': courses[2] = getCourses(urlD)
+    elif selection[i] == 'E': courses[3] = getCourses(urlE)
+    elif selection[i] == 'F': courses[4] = getCourses(urlF)
+    elif selection[i] == 'G': courses[5] = getCourses(urlG)
     else: print("An area you have selected is invalid")
     
 
@@ -86,19 +87,58 @@ for i in range(len(selection)):
     else:
         areaString += (' & ' + selection[i])
 
-print("Courses satisfying Area", areaString)
+areaCombinations = []
+selectionString = ''.join(selection)
+for i in range(len(selection)):
+    if i > 1:
+        areaCombinations.append([x for x in combinations(selectionString,i)])
 
-matches = set(courses[0]).intersection(courses[1])
-subsequentListIndex = 2
-while subsequentListIndex < (len(selection)):
-    matches = matches.intersection(courses[subsequentListIndex])
-    subsequentListIndex = subsequentListIndex + 1
+areaSelectionIndex = []
+for i in range(len(courses)):
+    if courses[i] != []:
+        areaSelectionIndex.append(i)
+        
+
+matches = set(courses[areaSelectionIndex[0]])
+
+for i in areaSelectionIndex:
+    matches = matches.intersection(courses[i])
+    
+if matches != set():
+    print("Courses satisfying Area", areaString)
+    print(matches)
+else:
+    print("No exact matches, but I found these:")
+    
+
+
+# The following is a monstrosity that needs to be reworked, please bear with me
+if matches == set():
+    for i in areaCombinations:
+        for j in i:
+            areaSelectionIndexSub = []  # List of positions to try to find close matches
+            for k in range(len(j)):
+                if j[k] == 'B': areaSelectionIndexSub.append(0)
+                elif j[k] == 'C': areaSelectionIndexSub.append(1)
+                elif j[k] == 'D': areaSelectionIndexSub.append(2)
+                elif j[k] == 'E': areaSelectionIndexSub.append(3)
+                elif j[k] == 'F': areaSelectionIndexSub.append(4)
+                elif j[k] == 'G': areaSelectionIndexSub.append(5)
+                
+            matches = set(courses[areaSelectionIndexSub[0]])
+            for i in areaSelectionIndexSub:
+                matches = matches.intersection(courses[i])
+            if matches != set():
+                areaString = ' & '.join(j)
+                matches = sorted(matches)
+                matches = ', '.join(matches)
+                print(areaString + ':',matches)
+
+#subsequentListIndex = 2
+#while subsequentListIndex < (len(selection)):
+#    matches = matches.intersection(courses[subsequentListIndex])
+#    subsequentListIndex = subsequentListIndex + 1
     
 # =============================================================================
-# if (len(selection) > 2) and (matches != set()):
-#     print('Perfect match not found. Near matches:')
-#     matches = set(courses[0]).intersection(courses[1])
-#     if matches != set():
+# print([x for x in combinations('DEF',2)])
 # =============================================================================
-
-print(matches)
