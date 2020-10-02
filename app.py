@@ -16,11 +16,11 @@ import requests
  
 app = Flask(__name__)
  
-@app.route("/")
+@app.route("/genedfinder/")
 def index():
     return "Enter selection in URL (Ex: 127.0.0.1/BCDEFG)"
  
-@app.route("/<string:selection>/")
+@app.route("/genedfinder/<string:selection>/")
 def genEdFinder(selection):
 
     # Gets all the courses found at the passed url and returns a list of their
