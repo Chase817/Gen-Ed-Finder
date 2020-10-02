@@ -76,6 +76,7 @@ def genEdFinder(selection):
     
     # Formats selection input from url to be used
     selection = selection.replace(" ", "")
+    selection = selection.upper()
     selection = list(selection)
     
     courses = [[],[],[],[],[],[]]  # List of area course lists, B through G
