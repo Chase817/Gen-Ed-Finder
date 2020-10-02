@@ -15,12 +15,14 @@ import re
 import requests
  
 app = Flask(__name__)
- 
-@app.route("/genedfinder/")
+
+@app.route("/GenEdFinder", strict_slashes=False)
+@app.route("/genedfinder", strict_slashes=False)
 def index():
-    return "Enter selection in URL (Ex: 127.0.0.1/BCDEFG)"
- 
-@app.route("/genedfinder/<string:selection>/")
+    return "Enter selection in URL (Ex: 127.0.0.1/GenEdFinder/BCDEFG)"
+
+@app.route("/GenEdFinder/<string:selection>", strict_slashes=False)
+@app.route("/genedfinder/<string:selection>", strict_slashes=False)
 def genEdFinder(selection):
 
     # Gets all the courses found at the passed url and returns a list of their
